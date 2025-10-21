@@ -1,4 +1,3 @@
-Computational biology course note based on Wageningen University&amp;Research, course code: SSB34306
 # Computational biology
 
 # 1A Molecular biology primer: from gene to protein
@@ -251,38 +250,49 @@ $$
    Where **m** is the effective length of query and **n** is the effective length of database 
 
 # 7 Protein Domains
-- Domains: are distinct structural units of proteins that fold independently and have a hydrophobic core, they're the most basic functional units of proteins that are required for their activity.\
-**Motifs** are found as patterns(specific or degenerate), which can define a domain, but also can be characteristic of a subset of a domain and found in DNA
+### Domain and Motifs
+**Domains** are distinct structural units of proteins that fold independently and have a hydrophobic core, they're the most basic functional units of proteins that are required for their activity.\
+**Motifs** are found as patterns(specific or degenerate), which can define a domain, but also can be characteristic of a subset of a domain and found in DNA.
 
-- Three general methods for domain identification:
-  - Patterns: highly conserved sequence motifs that are domain-unique
-  - Profiles: domain-specific position specific scoring matrices
-  - Hidden Markov Models(HMMs): probability-based models
+### General methods for domain identification
+1. Patterns: highly conserved sequence motifs that are domain-unique
+2. Profiles: position specific scoring matrices(PSSM)
+3. Hidden Markov Models(HMMs): probability-based models
 
 - Profiles, position-specific scoring matrices (PSSMs):\
   Table of position-specific scores and gap penalties based on a multiple sequence aligment. Specific matrix for each position in multiple sequence alignment. PSSM is a dynamic, domain-specific matrix
 
 - PSI-BLAST(Position-Specific Iterative BLAST):\
-  While standard BLAST uses a fixed substitution matrix (such as BLOSUM62), PSI-BLAST automatically creates a position-specific scoring matrix (**PSSM**) for your query sequence and continuously updates it over multiple iterations. This allows starting with closely related homologs, it gradually captures more distantly related proteins (those with lower sequence similarity but related functions).
+  While standard BLAST uses a fixed substitution matrix (such as BLOSUM62), PSI-BLAST automatically creates a position-specific scoring matrix (**PSSM**) for query sequence and continuously updates it over multiple iterations. This allows starting with closely related homologs, it gradually captures more distantly related proteins (those with lower sequence similarity but related functions).
 
 # 8 Topological signals and sequences
-- How proteins are sorted in the cell
-  **Three ways to move around**
-  - Gated transport: cytosol and nucleus using nuclear pore (No topological changes occurred， because the nuclear membrane is two)
-  - Protein translocation: use of a protein translocator to directly transport specific proteins across membrane(topologically change happened)
-  - vesicular transport(no topological change)
-  **How is protein location encoded?**
+### How proteins are sorted in the cell
+**Three ways to move around**
+1. Gated transport: cytosol and nucleus using nuclear pore (No topological changes occurred， because the nuclear membrane is two)
+2. Protein translocation: use of a protein translocator to directly transport specific proteins across membrane(topologically change happened)
+3. vesicular transport(no topological change)
+
+**How is protein location encoded?**
   - Signal sequence
   - Signal patches
-  **2 types of translocation processes**
+
+**2 types of translocation processes**
   - Co-translational translocation : signal-recognition particle(SRP) directs the ER signal sequence to a specific receptor in the rough ER membrane
   - Post-translational translocation
     
-- Illustrate the bioinformatics approaches developed to solve the problem
-  - PSORT： signal sequence decision tree, follow the decision tree to a cellular compartment
-  - Hidden Markov Model: an HMM models statistical regularities in a set of related sequences; tolerant to insertions and deletions. A profile is encoded in position-dependent state transitions
-  - TMHMM: transmembrane prediction based on HMM models
+### Illustrate the bioinformatics approaches developed to solve the problem
+- PSORT： signal sequence decision tree, follow the decision tree to a cellular compartment
+- Hidden Markov Model: an HMM models statistical regularities in a set of related sequences; tolerant to insertions and deletions. A profile is encoded in position-dependent state transitions
+- TMHMM: transmembrane prediction based on HMM models
  **Summary** For sinal peptides: signalIP/DeepSig; Transmembrane domains:TMHMM/DeepTMHMM; Signal sequences: PSORT/MULocDeep/DeepLoc
+
+### How to train a machine learning model
+1. inputs ($x_1$,$x_2$……$x_n$) coming to the neiron;
+2. value is multiplied by another variable called weight($w_1$,$w_2$……$w_n$) which determines the connection between the two neurons. All weights are added.
+3. Each connection of neurons are the only values that will be modified during the learning process;
+4. a bias value  may be added to the total value calculated
+5. the neuron finally applies a function called "activation function" to turn thr total value calculated before to a number between 0 and 1
+
 
 ==What to study for the exam== 
 - What are the three main problems in protein topology?
@@ -292,66 +302,71 @@ $$
 - How does the ML work in general? How do I assess a good ML tool?
 
 # 9 Gene Orthology
-- Understand the difference between gene orthologs and paralogs\
-  - Orthologs: Sequences whose last **common ancestor** diverged at a **speciation event**, they perform the same function;
-  - Paralogs: Sequences diverged at a **duplication event** in the **same species**, they have a different function. 
+### Orthologs and Paralogs
+**Orthologs**: Sequences whose last **common ancestor** diverged at a **speciation event**, they perform the same function;\
+**Paralogs**: Sequences diverged at a **duplication event** in the **same species**, they have a different function. 
 
-- Use different bioinformatic approaches to infer orthologs
- - **BBH**: Gene pairs with the highest sequence identity.
-   Step 1: Forward BLAST Search：Use the "human gene of interest" as the query and perform a BLAST search against the "Mouse Genome Database." Several significant matches (black dots) are obtained, with the one with the highest score being the best hit (green dot). This is the mouse gene most similar to the human gene.\
-   Step 2: Reverse BLAST: Now use the mouse gene (best hit) just found as the query and perform another BLAST search against the "Human Gene Database." If its best hit happens to be the original human gene, then the two are considered bidirectional best hits (BBHs).
+### Bioinformatic approaches to infer orthologs
+**BBH**: Gene pairs with the highest sequence identity.
+1. Forward BLAST Search：Use the "human gene of interest" as the query and perform a BLAST search against the "Mouse Genome Database." Several significant matches (black dots) are obtained, with the one with the highest score being the best hit (green dot). This is the mouse gene most similar to the human gene.\
+2. Reverse BLAST: Now use the mouse gene (best hit) just found as the query and perform another BLAST search against the "Human Gene Database." If its best hit happens to be the original human gene, then the two are considered bidirectional best hits (BBHs).
 
    Problem: 1. orthology is nit a 1-to-1 relationship; 2. Gene evolution does not always follow species evolution. BBH works well if gene duplications are rare, and the true ortholog of each gene is not missing.
 
    Whole-genome duplications are common in plants and limit the utility of BBH(A complementary strategy to infer orthology: Synteny)
- - **Synteny**: shared order and orientation of a string of multiple genes and their closest counterparts in a related genome. Genes in same order tend to correspond.
- - **DELTA-BLAST**: Domain-Enhanced Lookup Time Accelerated BLAST. queries the conserved domain database. Structures persist longer than sequence identity.
+
+**Synteny**: shared order and orientation of a string of multiple genes and their closest counterparts in a related genome. Genes in same order tend to correspond.
+
+**DELTA-BLAST**: Domain-Enhanced Lookup Time Accelerated BLAST. queries the conserved domain database. Structures persist longer than sequence identity.
 
 # 10 Multiple Sequence Alignments & Phylogeny
-- Why MSA are performed
+### Why MSA are performed
   - Allows genome annotation(domains/orthologs)
-  - Good for finding important conserved amino acid and nuvleotide positions
+  - Good for finding important conserved amino acid and nucleotide positions
   - Can be used to build advanced statistical models or patterns(PSI-BLAST, PSSM, HMM)
   - Difference can be used to study evolutionary relationships
 
-- Describe multiple criteria and strategies used to select sequences for MSA and phylogenetic trees
+### Describe multiple criteria and strategies used to select sequences for MSA and phylogenetic trees
   - Sequences must be homologous
   - Sequences must align globally
   - Should have same domains in same order
 
-- Explain the general procedure used to generate phylogenetic trees
+### Explain the general procedure used to generate phylogenetic trees
   1. retrieving sequences: Swissprot/Uniprot--function; Reference protein database--species of interest;
   2.  Measure sequence similarity;
   3.  Tree building: WPGMA/UPGMA/Neighbor Joining;
   4.  Testing tree accuracy: Bootstrap
 
-- Describe a statistical process used to determine the reliability of phylogenetic trees--Bootstrap
+## Bootstrap-- a statistical process used to determine the reliability of phylogenetic trees
   1. Columns of MSAs are randomly sampled to generate different sequences of the same length and composition;
   2. For each replicate, a tree is built;
   3. Repeat steps 1-2 many times
   4. Bootstrap values = macthing replicates/total replicates
 
 # 11 Basics of protein folding
-- Bonds types:
-  - Covalent bonds
-  - Non-covalent interactions:
+### Bonds types
+- Covalent bonds
+- Non-covalent interactions:
     1. Electrostatic interactions
     2. Hydrogen bonds
     3. Van der Waals forces
     4. Hydrophobic interactions
 
-- Why does a protein fold? Covalent and non-covalent bonds reduce $\Delta G$
+### Why does a protein fold?
+Covalent and non-covalent bonds reduce $\Delta G$
 
-- Dihedral angles: the only reasonable movements are around the Ca-N($\phi$) bond and the Ca-C bond($\psi$). A Ramachandran plot shows which phi and psi angles are typically found
+### Dihedral angles
+The only reasonable movements are around the Ca-N($\phi$) bond and the Ca-C bond($\psi$). A Ramachandran plot shows which phi and psi angles are typically found
 
 # 12 3D protein structures
 
 - Primary structure: the sequence
 - Secondary structure:
-  1. $\alpha$-helices, Often negative amino acid near N-terminus, positive near C-terminus; 
-  2. $\beta$-strands, bulky aromatic side-chains fit well in strands, and beta-branched residues are very suitable for beta-sheets;
-  3. turns: connect the secondary structure elements;
-  4. loops;
+  1. **$\alpha$-helices**, Often negative amino acid near N-terminus, positive near C-terminus; 
+  2. **$\beta$-strands**, bulky aromatic side-chains fit well in strands, and beta-branched residues are very suitable for beta-sheets;
+  3. **$\beta$-sheets**, a $\beta$-sheets consist of at least two $\beta$-strands interacting with each other. R-groups of neighbouring residues within one beta-strand point in opposite directions. R-groups of neighbouring residues on adjacent beta-strands point in the same direction;
+  4. **turns**: connect the secondary structure elements, its a special structures that allow for chain reversal;
+  5. **loops**;
 - Tertiary structure: Interactions between the secondary structure elements to form the structured protein subunit.
 - Quaternary structure: Multiple protein subunits together form a quaternary protein structure
 
@@ -369,21 +384,23 @@ $$
 | | - Preservation of hydrated state | |
 | | - Works on large range of sample types (incl. very large proteins) |  |
 
-- Why search for similar structures?
+### Why search for similar structures?
   1. Find homologs with low sequence similarity
   2. Explore protein evolution: similar protein folds can support different functions
   3. Identify conserved core elements to model related proteins of unlnown structure
 
-# 14 Protein Structure Modelling and Quality Check
-- Why protein structure prediction?\
-  We have an experimentally determined atomic structure for only a small fraction of the known protein sequences. Modelling is a quick and cheap way to explore protein structures and functions.
-  
-- Why structure comparison?
-  - To understand structure-function relationship;
-  - To study the evolution of many key proteins(structure is more conserved)
+**VAST**: Vector Alignment Search Tool, search by structure
 
-- AlphaFold2's Deep Learning algorithm
-  1. Compare input sequence to databases; MSA and align with structural database;
-  2. Neural network for refinement;
-  3. Construct and evaluate models
+# 14 Protein Structure Modelling and Quality Check
+### Why protein structure prediction?
+We have an experimentally determined atomic structure for only a small fraction of the known protein sequences. Modelling is a quick and cheap way to explore protein structures and functions.
+  
+### Why structure comparison?
+- To understand structure-function relationship;
+- To study the evolution of many key proteins(structure is more conserved)
+
+### AlphaFold2's Deep Learning algorithm
+1. Compare input sequence to databases; MSA and align with structural database;
+2. Neural network for refinement;
+3. Construct and evaluate models
 
